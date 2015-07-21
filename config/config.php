@@ -30,5 +30,7 @@ foreach($acfgAllowTagParams as $sKey => $aItem){
 Config::Set('jevix.default.cfgAllowTagParams',$acfgAllowTagParams);
 
 $config=array();
+
+$config['preview_width'] = 600;
 return $config;
 ?>

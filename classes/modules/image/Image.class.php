@@ -1,8 +1,9 @@
 <?php
 
-class PluginExtentedimage_ModuleImage extends PluginExtendimage_Inherit_ModuleImage
-{
+class PluginExtentedimage_ModuleImage extends PluginExtendimage_Inherit_ModuleImage{
 	public function BuildHTML($sPath,$aParams){
+		
+		$sPreviewPath = $this->Image_GetPreviewServerPath($sPath);
 		
 		$sText = '';
 		
@@ -10,7 +11,7 @@ class PluginExtentedimage_ModuleImage extends PluginExtendimage_Inherit_ModuleIm
 		$sText .=' class="clickable_img"';
 		$sText .=' >';
 		
-		$sText .='<img src="'.$sPath.'" ';
+		$sText .='<img src="'.$sPreviewPath.'" ';
 		if (isset($aParams['title']) and $aParams['title']!='') {
 			$sText.=' title="'.htmlspecialchars($aParams['title']).'" ';
 			/**
@@ -34,5 +35,14 @@ class PluginExtentedimage_ModuleImage extends PluginExtendimage_Inherit_ModuleIm
 		$sText .='</a>';
 		
 		return $sText;
+	}
+
+	public function GetPreviewServerPath($sServerPath){
+		$sFileName = basename($sServerPath);
+		$sDir = dirname($sServerPath);
+		
+		$sPreviewFileName = $sDir.'/prev_'.$sFileName;
+		
+		return $sPreviewFileName;
 	}
 }
