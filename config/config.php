@@ -14,6 +14,21 @@
 *
 ---------------------------------------------------------
 */
+
+/*
+ * Добавляем необходимые параметры в конфиг jevixы
+ */
+$acfgAllowTagParams = Config::Get('jevix.default.cfgAllowTagParams');
+foreach($acfgAllowTagParams as $sKey => $aItem){
+	if($aItem[0] == 'a'){
+		$acfgAllowTagParams[$sKey][1] = array_merge(
+			$aItem[1],
+			array('target' => array('_blank'), 'class'=> array('clickable_img'))
+		);
+	}
+}
+Config::Set('jevix.default.cfgAllowTagParams',$acfgAllowTagParams);
+
 $config=array();
 return $config;
 ?>
