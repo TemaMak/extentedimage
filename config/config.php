@@ -31,6 +31,10 @@ Config::Set('jevix.default.cfgAllowTagParams',$acfgAllowTagParams);
 
 $config=array();
 
-$config['preview_width'] = 600;
+$config['topic_preview_width'] = 600;
+$config['comment_preview_width'] = 100;
+
+$config['topic_preview_enable'] = true;
+$config['comment_preview_enable'] = false;
 return $config;
 ?>

@@ -40,3 +40,10 @@ ls.hook.add('ls_comment_inject_after',function(){
 ls.hook.add('ls_comments_add_after',function(){
 	InitImgPopUp();
 });
+
+ls.hook.inject (
+	[ls,'ajaxUploadImg'], 
+	"jQuery('#sToLoad').val(sToLoad);",
+	'ajaxUploadImgBefore'
+);
+

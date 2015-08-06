@@ -3,7 +3,12 @@
 class PluginExtentedimage_ModuleImage extends PluginExtendimage_Inherit_ModuleImage{
 	public function BuildHTML($sPath,$aParams){
 		
-		$sPreviewPath = $this->Image_GetPreviewServerPath($sPath);
+		list($sEnableKey,$sWidthKey) = $this->Image_getPreviewConfigKey();
+		if(Config::Get($sEnableKey) == true){
+			$sPreviewPath = $this->Image_GetPreviewServerPath($sPath);
+		} else{
+			$sPreviewPath = $sPath;
+		}
 		
 		$sText = '';
 		
@@ -45,4 +50,22 @@ class PluginExtentedimage_ModuleImage extends PluginExtendimage_Inherit_ModuleIm
 		
 		return $sPreviewFileName;
 	}
+	
+	public function getPreviewConfigKey(){
+		if(isset($_REQUEST['sToLoad'])){
+			if($_REQUEST['sToLoad'] == 'topic_text'){
+				$sEnableKey = 'plugin.extentedimage.topic_preview_enable';
+				$sWidthKey = 'plugin.extentedimage.topic_preview_width';			
+			} else {
+				$sEnableKey = 'plugin.extentedimage.comment_preview_enable';
+				$sWidthKey = 'plugin.extentedimage.comment_preview_width';				
+			}
+		} else {
+			$sEnableKey = 'plugin.extentedimage.topic_preview_enable';
+			$sWidthKey = 'plugin.extentedimage.topic_preview_width';
+		}
+		
+		return array($sEnableKey,$sWidthKey);
+	}
+	
 }

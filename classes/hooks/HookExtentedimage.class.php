@@ -7,13 +7,15 @@ class PluginExtentedimage_HookExtentedimage extends Hook {
      */
     public function RegisterHook() {
 		$this->AddHook('module_topic_uploadtopicimagefile_after', 'createPrev');
-
+		$this->AddHook('template_uploadimg_source', 'set_type_upload');
     }
 
     public function createPrev($aParams) {
 		$sPath = $aParams['result'];
 		
-		if($sPath && Config::Get('plugin.extentedimage.preview_width')){
+		list($sEnableKey,$sWidthKey) = $this->Image_getPreviewConfigKey();
+		
+		if($sPath && Config::Get($sEnableKey) && Config::Get($sWidthKey)){
 			$sLocalPath = $this->Image_GetServerPath($sPath);
 			$sPreviewPath = $this->Image_GetPreviewServerPath($sLocalPath);
 			
@@ -27,7 +29,7 @@ class PluginExtentedimage_HookExtentedimage extends Hook {
 				$sFileName,
 				Config::Get('view.img_max_width'),
 				Config::Get('view.img_max_height'),
-				Config::Get('plugin.extentedimage.preview_width'),
+				Config::Get($sWidthKey),
 				null,
 				true
 			);
@@ -37,6 +39,9 @@ class PluginExtentedimage_HookExtentedimage extends Hook {
 		
     }
     
-
+	public function set_type_upload($aParams){
+		return '<input type="hidden" id="sToLoad" name="sToLoad">';
+	}
+    
 }
 ?>
