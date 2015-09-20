@@ -6,16 +6,25 @@ class PluginExtentedimage_HookExtentedimage extends Hook {
      * Регистрация событий на хуки
      */
     public function RegisterHook() {
+    	$this->AddHook('module_topic_uploadtopicimagefile_before', 'copyUploadFile');
 		$this->AddHook('module_topic_uploadtopicimagefile_after', 'createPrev');
 		$this->AddHook('template_uploadimg_source', 'set_type_upload');
     }
 
+    public function copyUploadFile(){
+ 		$sFileTmp=Config::Get('sys.cache.dir').func_generator();
+		copy($_FILES['img_file']['tmp_name'],$sFileTmp); 
+		$_SESSION['tmp_upload_file']  = $sFileTmp;	
+    }
+    
     public function createPrev($aParams) {
 		$sPath = $aParams['result'];
 		
 		list($sEnableKey,$sWidthKey) = $this->Image_getPreviewConfigKey();
 		
 		if($sPath && Config::Get($sEnableKey) && Config::Get($sWidthKey)){
+			$sFileTmp = $_SESSION['tmp_upload_file'];
+			
 			$sLocalPath = $this->Image_GetServerPath($sPath);
 			$sPreviewPath = $this->Image_GetPreviewServerPath($sLocalPath);
 			
@@ -23,16 +32,20 @@ class PluginExtentedimage_HookExtentedimage extends Hook {
 			$sFileNameTmp = basename($sPreviewPath);
 			list($sFileName,$sExtension) = explode('.',$sFileNameTmp);
 
+			$aImageParams=$this->Image_BuildParams('topic');
 			$this->Image_Resize(
-				$sLocalPath,
+				$sFileTmp,
 				$sDirUpload,
 				$sFileName,
 				Config::Get('view.img_max_width'),
 				Config::Get('view.img_max_height'),
 				Config::Get($sWidthKey),
 				null,
-				true
+				true,
+				$aImageParams
 			);
+			
+			@unlink($sFileTmp);
 		} 
 
 		
