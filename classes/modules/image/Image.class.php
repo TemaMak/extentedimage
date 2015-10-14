@@ -13,10 +13,12 @@ class PluginExtentedimage_ModuleImage extends PluginExtendimage_Inherit_ModuleIm
 		}
 		
 		$sText = '';
-		
-		$sText .= '<a href="'.$sPath.'"';
-		$sText .=' class="clickable_img"';
-		$sText .=' >';
+		if($this->isNeedPopup()){
+			$sText .= '<a href="'.$sPath.'"';
+			$sText .=' class="clickable_img"';
+			$sText .=' >';			
+		}
+
 		
 		$sText .='<img src="'.$sPreviewPath.'" ';
 		if (isset($aParams['title']) and $aParams['title']!='') {
@@ -39,7 +41,9 @@ class PluginExtentedimage_ModuleImage extends PluginExtendimage_Inherit_ModuleIm
 			: ' alt=""';
 		$sText.=$sAlt.' />';
 
-		$sText .='</a>';
+		if($this->isNeedPopup()){
+			$sText .='</a>';	
+		}		
 		
 		return $sText;
 	}
@@ -85,7 +89,7 @@ class PluginExtentedimage_ModuleImage extends PluginExtendimage_Inherit_ModuleIm
 				 * Проверяем размеры изображения только, если это требуется
 				 */
 				if(
-					Config::Get('plugin.extentedimage.check_image_width')
+					Config::Get('plugin.extentedimage.check_image_width_for_resize')
 					&& $oImage->get_image_params('width') <= Config::Get($sWidthKey)
 				){
 					$this->bResize = -1;
@@ -98,6 +102,16 @@ class PluginExtentedimage_ModuleImage extends PluginExtendimage_Inherit_ModuleIm
 		} else {
 			return false;
 		}		
+	}
+
+	public function isNeedPopup(){
+		if(Config::Get('plugin.extentedimage.check_image_width_for_popup')){
+			if(!$this->isNeedResize()){
+				return false;	
+			}
+		}
+		
+		return true;
 	}
 	
 }

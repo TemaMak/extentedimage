@@ -36,6 +36,20 @@ $config['comment_preview_width'] = 100;
 
 $config['topic_preview_enable'] = true;
 $config['comment_preview_enable'] = true;
-$config['check_image_width'] = true;
+
+/*
+ * Проверка размера изображения перед созданием превью.
+ * true - если реальная ширина изображения меньше ширины для превью, то превью не создается
+ * false - необходимость создания превью определяется флагами  *_enable
+ */
+$config['check_image_width_for_resize'] = true;
+
+/*
+ * Проверка необходимости генерировать html-код для popup'а с полноразмерным изображением 
+ * true - код генерируется только если был создан файл превью 
+ * false - код генерируется всегда
+ */
+$config['check_image_width_for_popup'] = true;
+
 return $config;
 ?>
