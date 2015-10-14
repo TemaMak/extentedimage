@@ -22,9 +22,11 @@ class PluginExtentedimage_HookExtentedimage extends Hook {
 		
 		list($sEnableKey,$sWidthKey) = $this->Image_getPreviewConfigKey();
 		
-		if($sPath && Config::Get($sEnableKey) && Config::Get($sWidthKey)){
-			$sFileTmp = $_SESSION['tmp_upload_file'];
-			
+		//$oImage->get_image_params('width')
+		$sFileTmp = $_SESSION['tmp_upload_file'];
+		$bNeedResize = $this->Image_isNeedResize($sFileTmp);
+		echo $bNeedResize;
+		if($sPath && $bNeedResize){						
 			$sLocalPath = $this->Image_GetServerPath($sPath);
 			$sPreviewPath = $this->Image_GetPreviewServerPath($sLocalPath);
 			

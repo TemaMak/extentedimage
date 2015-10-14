@@ -1,10 +1,12 @@
 <?php
 
 class PluginExtentedimage_ModuleImage extends PluginExtendimage_Inherit_ModuleImage{
+	protected $bResize = 0;
+	
 	public function BuildHTML($sPath,$aParams){
 		
-		list($sEnableKey,$sWidthKey) = $this->Image_getPreviewConfigKey();
-		if(Config::Get($sEnableKey) == true){
+		$bNeedResize = $this->Image_isNeedResize($sFileTmp);
+		if($bNeedResize){
 			$sPreviewPath = $this->Image_GetPreviewServerPath($sPath);
 		} else{
 			$sPreviewPath = $sPath;
@@ -66,6 +68,36 @@ class PluginExtentedimage_ModuleImage extends PluginExtendimage_Inherit_ModuleIm
 		}
 		
 		return array($sEnableKey,$sWidthKey);
+	}
+	
+	public function isNeedResize($sFilePath = false){
+		if($this->bResize == 0){
+			/*
+			 * Если необходимость ресайза еще не сохранена, то вычисляем её
+			 */
+			$this->bResize = -1;
+			list($sEnableKey,$sWidthKey) = $this->Image_getPreviewConfigKey();
+			if(Config::Get($sEnableKey) && Config::Get($sWidthKey)){
+				$oImage=$this->CreateImageObject($sFilePath);
+				$this->bResize = 1;
+				
+				/*
+				 * Проверяем размеры изображения только, если это требуется
+				 */
+				if(
+					Config::Get('plugin.extentedimage.check_image_width')
+					&& $oImage->get_image_params('width') <= Config::Get($sWidthKey)
+				){
+					$this->bResize = -1;
+				}
+			} 
+		}
+		
+		if($this->bResize > 0){
+			return true;
+		} else {
+			return false;
+		}		
 	}
 	
 }

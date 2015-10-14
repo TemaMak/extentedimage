@@ -35,6 +35,7 @@ $config['topic_preview_width'] = 300;
 $config['comment_preview_width'] = 100;
 
 $config['topic_preview_enable'] = true;
-$config['comment_preview_enable'] = false;
+$config['comment_preview_enable'] = true;
+$config['check_image_width'] = true;
 return $config;
 ?>
